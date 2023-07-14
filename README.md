@@ -13,14 +13,12 @@ This is a question-answer website where users can submit questions and answers t
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/your-username/question-answer-website.git
+   git clone https://github.com/kavyargb/question-answers.git
    ```
 
 2. Navigate to the project directory:
 
-   ```shell
-   cd question-answer-website
-   ```
+  The main directory contains the basic code
 
 3. Open the `index.html` file in your preferred web browser to access the website.
 
