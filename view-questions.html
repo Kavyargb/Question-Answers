@@ -1,0 +1,46 @@
+<!-- view-data.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Data</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>View Data</h1>
+  </header>
+  
+  <main>
+    <section>
+      <h2>Question-Answer List</h2>
+      <ul id="question-answer-list"></ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Question-Answer Website</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Retrieve the questionAnswers array from localStorage
+    const questionAnswers = JSON.parse(localStorage.getItem('questionAnswers')) || [];
+
+    // Get the question-answer list element
+    const questionAnswerList = document.getElementById('question-answer-list');
+
+    // Populate the question-answer list
+    questionAnswers.forEach((qa, index) => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `
+        <h3>Question ${index + 1}: ${qa.question}</h3>
+        <p>Answer: ${qa.answer}</p>
+      `;
+      questionAnswerList.appendChild(listItem);
+    });
+  </script>
+</body>
+</html>
