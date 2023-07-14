@@ -1,12 +1,10 @@
-<!-- view-data.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>View Data</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
@@ -24,15 +22,12 @@
     <p>&copy; 2023 Question-Answer Website</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="data.js"></script>
   <script>
-    // Retrieve the questionAnswers array from localStorage
-    const questionAnswers = JSON.parse(localStorage.getItem('questionAnswers')) || [];
-
     // Get the question-answer list element
     const questionAnswerList = document.getElementById('question-answer-list');
 
-    // Populate the question-answer list
+    // Populate the question-answer list from the data.js file
     questionAnswers.forEach((qa, index) => {
       const listItem = document.createElement('li');
       listItem.innerHTML = `

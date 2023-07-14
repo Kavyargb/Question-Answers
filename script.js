@@ -6,28 +6,41 @@ const form = document.querySelector('#question-form');
 const dashboard = document.querySelector('#dashboard');
 
 // Create an event listener for the form submission
-form.addEventListener('submit', function (event) {
-  event.preventDefault(); // Prevent the default form submission behavior
+// Update the event listener for the form submission
+// Update the event listener for the form submission
+form.addEventListener('submit', async function (event) {
+  event.preventDefault();
 
-  // Get the user input values
   const questionInput = document.querySelector('#question-input');
   const answerInput = document.querySelector('#answer-input');
 
-  // Create an object to store the question and answer
   const questionAnswer = {
     question: questionInput.value,
     answer: answerInput.value,
   };
 
-  // Add the question and answer to the array
-  questionAnswers.push(questionAnswer);
+  try {
+    const response = await fetch('/.netlify/functions/api/questions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(questionAnswer),
+    });
 
-  // Reset the input fields
+    if (response.ok) {
+      // Update the dashboard
+      questionAnswers.push(questionAnswer);
+      updateDashboard();
+    } else {
+      console.log('Error: Failed to add question');
+    }
+  } catch (err) {
+    console.log('Error: Failed to add question', err);
+  }
+
   questionInput.value = '';
   answerInput.value = '';
-
-  // Update the dashboard
-  updateDashboard();
 });
 
 // Function to update the dashboard with the submitted questions and answers
