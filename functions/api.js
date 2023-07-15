@@ -1,20 +1,20 @@
 // functions/api.js
-const csvWriter = require('csv-writer').createObjectCsvWriter;
-const writer = csvWriter({
-  path: 'question_answers.csv',
-  header: [
-    { id: 'question', title: 'Question' },
-    { id: 'answer', title: 'Answer' },
-  ],
-  append: true,
-});
+const fs = require('fs');
+const csv = require('fast-csv');
+
+const csvFilePath = 'question_answers.csv';
 
 exports.handler = async (event, context) => {
   try {
     if (event.httpMethod === 'POST') {
       const { question, answer } = JSON.parse(event.body);
 
-      await writer.writeRecords([{ question, answer }]);
+      const csvStream = csv.format({ headers: true });
+      const writableStream = fs.createWriteStream(csvFilePath, { flags: 'a' });
+
+      csvStream.pipe(writableStream);
+      csvStream.write({ question, answer });
+      csvStream.end();
 
       return {
         statusCode: 200,
