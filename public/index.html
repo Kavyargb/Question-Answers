@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Welcome to Firebase Hosting</title>
+
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/10.0.0/firebase-app.js"></script>
+  <script defer src="/__/firebase/10.0.0/firebase-firestore.js"></script>
+  <script defer src="/__/firebase/10.0.0/firebase-analytics.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Question and Answer Site</h1>
+  </header>
+
+  <main>
+    <section id="ask-question">
+      <h2>Ask a Question</h2>
+      <form id="question-form">
+        <input type="text" id="question-input" placeholder="Enter your question" required>
+        <textarea id="details-input" placeholder="Enter additional details"></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <section id="recent-questions">
+      <h2>Recent Questions</h2>
+      <ul id="question-list">
+        <!-- Question items will be dynamically added here -->
+      </ul>
+    </section>
+  </main>
+
+  <script>
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDC2bWlRt-MH0ACGEYr-ZXXsyoP8P80Bk4",
+        authDomain: "ques-n-ans.firebaseapp.com",
+        projectId: "ques-n-ans",
+        storageBucket: "ques-n-ans.appspot.com",
+        messagingSenderId: "460448830416",
+        appId: "1:460448830416:web:b158e9daf4de5f0f509fd5",
+        measurementId: "G-TDGYMGPN1Z"
+      };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const collectionName = "questions";
+
+    // Fetch and display the recent questions
+    function fetchRecentQuestions() {
+      db.collection(collectionName)
+        .orderBy("timestamp", "desc") // Assuming you have a 'timestamp' field in your documents
+        .limit(10) // Fetching the 10 most recent questions
+        .onSnapshot(function (snapshot) {
+          var questionList = document.getElementById('question-list');
+          questionList.innerHTML = ""; // Clear existing questions
+
+          snapshot.forEach(function (doc) {
+            var questionData = doc.data();
+            var question = questionData.question;
+            var details = questionData.details;
+
+            var li = document.createElement('li');
+            li.innerHTML = '<h3>' + question + '</h3><p>' + details + '</p>';
+            questionList.appendChild(li);
+          });
+        });
+    }
+
+    // Add a new question to Firestore
+    function addQuestion(question, details) {
+      db.collection(collectionName).add({
+        question: question,
+        details: details,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp() // Add a timestamp field to the document
+      })
+      .then(function (docRef) {
+        console.log("Question added with ID: ", docRef.id);
+      })
+      .catch(function (error) {
+        console.error("Error adding question: ", error);
+      });
+    }
+
+    // Event listener for the form submission
+    document.getElementById('question-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var questionInput = document.getElementById('question-input').value;
+      var detailsInput = document.getElementById('details-input').value;
+      addQuestion(questionInput, detailsInput);
+      clearForm();
+    });
+
+    // Clear the form after submission
+    function clearForm() {
+      document.getElementById('question-input').value = '';
+      document.getElementById('details-input').value = '';
+    }
+
+    // Fetch the recent questions when the page loads
+    window.addEventListener('load', function () {
+      fetchRecentQuestions();
+    });
+  </script>
+</body>
+</html>
